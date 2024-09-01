@@ -4,10 +4,11 @@
 #define BLACK 1
 #define WHITE -1
 #define EMPTY 0
-#define bool int
 #define true 1  
 #define false 0
 
+typedef int player;
+typedef int bool;
 /**game_mode
  * 0: pvp
  * 1: pve

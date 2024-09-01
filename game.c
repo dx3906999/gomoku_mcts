@@ -7,12 +7,12 @@
 
 int game_mode;
 
-int current_i=0;
-int current_j=0;
-int black_last_i=0;
-int black_last_j=0;
-int white_last_i=0;
-int white_last_j=0;
+int i_current=0;
+int j_current=0;
+int i_black_last=0;
+int j_black_last=0;
+int i_white_last=0;
+int j_white_last=0;
 
 
 int current_player=BLACK;
@@ -61,8 +61,14 @@ int main(int argc, char const *argv[])
 {
     // Ö÷Âß¼­Ã»Ğ´
     print_title();
+    // print_chessboard();
+    i_current=1;
+    j_current=10;
+    update_chessboard_data_one_step();
+    update_chessboard_str();
+    
     print_chessboard();
-    get_move_input(&current_i,&current_j);
+    get_move_input(&i_current,&j_current);
     return 0;
 }
 
@@ -176,8 +182,8 @@ void update_chessboard_str(){
 
     for (size_t k = 0; k < 2; k++)
     {
-        chessboard_str[3*(black_last_i+1)+black_last_i+black_last_i*2*29+4*black_last_j+k]=BLACK_LAST_STR[k];
-        chessboard_str[3*(white_last_i+1)+white_last_i+white_last_i*2*29+4*white_last_j+k]=WHITE_LAST_STR[k];
+        chessboard_str[3*(i_black_last+1)+i_black_last+i_black_last*2*29+4*j_black_last+k]=BLACK_LAST_STR[k];
+        chessboard_str[3*(i_white_last+1)+i_white_last+i_white_last*2*29+4*j_white_last+k]=WHITE_LAST_STR[k];
     }
     
     
@@ -188,6 +194,6 @@ void update_chessboard_str(){
  * 
  */
 void update_chessboard_data_one_step(){
-    chessboard_data[current_i][current_j]=current_player;
+    chessboard_data[i_current][j_current]=current_player;
 }
 

@@ -19,6 +19,11 @@ Node* new_Node(Node* parent){
     return node;
 }
 
+void change_point(Node* node,int i,int j){
+    node->i=i;
+    node->j=j;
+}
+
 void free_Node(Node* node){
     if (node->children_num>0)
     {

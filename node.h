@@ -1,6 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "global.h"
+
 #define MAX_CHILDREN 225
 
 
@@ -10,6 +12,9 @@ struct Node{
     float value;
     int visit_num;
     int children_num;
+    int i;
+    int j;
+    player player;
     Node* parent;
     Node* children[MAX_CHILDREN];
 };
