@@ -20,6 +20,7 @@ struct Node{
 };
 
 Node* new_Node(Node* parent);
+void change_node_point(Node* node,int i,int j);
 void free_Node(Node* node);
 
 #endif

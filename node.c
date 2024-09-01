@@ -19,7 +19,7 @@ Node* new_Node(Node* parent){
     return node;
 }
 
-void change_point(Node* node,int i,int j){
+void change_node_point(Node* node,int i,int j){
     node->i=i;
     node->j=j;
 }

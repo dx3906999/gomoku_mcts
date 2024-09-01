@@ -17,7 +17,7 @@ int j_white_last=0;
 
 int current_player=BLACK;
 
-int chessboard_data[15][15]={[0 ... 14][0 ... 14]=0};
+int global_chessboard_data[15][15]={[0 ... 14][0 ... 14]=0};
 
 char chessboard_str[]=
     "15 ┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐\n"
@@ -59,23 +59,49 @@ char WHITE_LAST_STR[]="▲";
 
 int main(int argc, char const *argv[])
 {
-    // 主逻辑没写
-    print_title();
-    // print_chessboard();
-    i_current=1;
-    j_current=10;
-    update_chessboard_data_one_step();
-    update_chessboard_str();
+    while (1)
+    {
+        int game_mode_choice;
+        char ch;
+        print_title();
+        printf("1.pvp\n2.pve\n3.train\n4.quit\n");
+        scanf("%d",&game_mode_choice);
+        while((ch = getchar()) != '\n' && ch != EOF);
+        switch (game_mode_choice)
+        {
+        case 1:
+            human_vs_human();
+            break;
+        case 2:
+            human_vs_ai();
+            break;
+        case 3:
+            train();
+            break;
+        case 4:
+            exit(0);
+            break;
+        default:
+            printf("invalid choice.");
+            break;
+        }
+    }
     
-    print_chessboard();
-    get_move_input(&i_current,&j_current);
+
+    // print_title();
+    // print_chessboard();
+    // i_current=1;
+    // j_current=10;
+    // update_global_chessboard_data_one_step();
+    // update_chessboard_str();
+    
+    // print_chessboard();
+    // get_move_input(&i_current,&j_current);
     return 0;
 }
 
 
-void print_menu(){
 
-}
 
 void print_chessboard(){
     printf("%s",chessboard_str);
@@ -88,8 +114,8 @@ void print_title(){
 /**
  * @brief 在对局中读取一步的坐标
  * 
- * @param i 
- * @param j 
+ * @param i 读出的i坐标
+ * @param j 读出的j坐标
  * @return true 成功读取坐标
  * @return false 退出、保存或读取坐标失败
  */
@@ -145,7 +171,7 @@ bool get_move_input(int* i, int* j){
 }
 
 /**
- * @brief 根据chessboard_data更新chessboard_str
+ * @brief 根据global_chessboard_data更新chessboard_str
  * 
  */
 void update_chessboard_str(){
@@ -156,7 +182,7 @@ void update_chessboard_str(){
     {
         for (size_t j = 0; j < 15; j++)
         {
-            switch (chessboard_data[i][j])
+            switch (global_chessboard_data[i][j])
             {
             case BLACK:
                 for (size_t k = 0; k < 2; k++)
@@ -190,10 +216,68 @@ void update_chessboard_str(){
 }
 
 /**
- * @brief 更新本步棋盘数据
+ * @brief 更新一步本棋盘数据
  * 
+ * @param chessboard_data 
+ * @param i 
+ * @param j 
+ * @param player 
  */
-void update_chessboard_data_one_step(){
-    chessboard_data[i_current][j_current]=current_player;
+void update_chessboard_data_one_step(int** chessboard_data,int i,int j,player player){
+    chessboard_data[i][j]=player;
+}
+
+void update_global_chessboard_data_one_step(){
+    global_chessboard_data[i_current][j_current]=current_player;
+}
+
+bool chessboard_is_full(int** chessboard_data){
+    for (size_t i = 0; i < 15; i++)
+    {
+        for (size_t j = 0; j < 15; j++)
+        {
+            if (chessboard_data[i][j]==EMPTY)
+            {
+                return false;
+            }
+            
+        }
+        
+    }
+
+    return true;
+    
+}
+
+/**
+ * @brief 判断当前局面输赢，不包含下满棋盘的情况
+ * 
+ * @param chessboard_data 
+ * @param player 
+ * @return true 
+ * @return false 
+ */
+bool is_win(int** chessboard_data,player player){
+    bool result;
+    if (player==WHITE)  // 白棋无禁手
+    {
+        result=is_five_in_a_row();
+    }
+    else  // 黑棋考虑禁手
+    {
+        result=(!is_move_forbidden())&&(is_five_in_a_row());
+    }
+    return result;
+}
+
+void human_vs_human(){
+    
+}
+
+void human_vs_ai(){
+
+}
+void train(){
+
 }
 
