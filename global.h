@@ -4,8 +4,11 @@
 #define BLACK 1
 #define WHITE -1
 #define EMPTY 0
-#define true 1  
+#define true 1
 #define false 0
+#define SIG_SAVE 114514
+#define MIN(x,y) (((x)>(y))?(y):(x))
+#define MAX(x,y) (((x)>(y))?(x):(y))
 
 typedef int player;
 typedef int bool;
