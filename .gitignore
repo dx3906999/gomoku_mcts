@@ -4,3 +4,4 @@ test*
 *.lib
 /.vscode
 /.vs
+temp*
