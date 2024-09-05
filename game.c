@@ -650,3 +650,5 @@ void train(){
 
 }
 
+// i_white_last
+
