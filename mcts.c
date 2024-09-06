@@ -152,8 +152,7 @@ Node* expand_random(Node* node){
         is_tried=false;
         i_random=rand()%15;
         j_random=rand()%15;
-        if ((node->chessboard_data[i_random][j_random]!=EMPTY)||(i_random==node
-        ->i&&j_random==node->j))
+        if ((node->chessboard_data[i_random][j_random]!=EMPTY)||(i_random==node->i&&j_random==node->j))
         {
             is_tried=true;
             
