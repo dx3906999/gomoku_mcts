@@ -12,10 +12,12 @@ struct Node{
     float value;
     int visit_num;
     int children_num;
+    int children_num_max;
     int i;
     int j;
     player player;
     Node* parent;
+    int chessboard_data[15][15];        // 实际上是父节点下完后的棋盘
     Node* children[MAX_CHILDREN];
 };
 

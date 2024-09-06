@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
+#include <time.h>
 
 #include "mcts.h"
 #include "node.h"
@@ -49,10 +50,10 @@ float UCB(Node* node){
  * @param node 
  * @return Node* 
  */
-Node* select(Node* node){
-    if (node->children_num==0)
+/* Node* select(Node* node){
+    if (node->children_num!=node->children_num_max)
     {
-        return node;
+        return expand(node);
     }
     else
     {
@@ -75,7 +76,46 @@ Node* select(Node* node){
     }
     
     
+} */
+
+Node* select(Node* node){
+    while (node->children_num!=0)
+    {
+        if (node->children_num!=node->children_num_max)
+        {
+            return expand_random(node);
+        }
+        else
+        {
+            node=best_child(node);
+        }
+        
+    }
+
+    return node;
+    
 }
+
+
+Node* best_child(Node* node){
+    float ucb_max=0;
+    float ucb_temp;
+    int best_child;
+    for (size_t i = 0; i < node->children_num; i++)
+    {
+        ucb_temp=UCB(node->children[i]);
+        if (ucb_temp>ucb_max)
+        {
+            ucb_max=ucb_temp;
+            best_child=i;
+        }
+        
+    }
+
+    return node->children[best_child];
+    
+}
+
 
 
 /**
@@ -88,6 +128,7 @@ Node* select(Node* node){
 void get_random_move(int chessboard_data[15][15],int* i_result, int* j_result){
     int i_random;
     int j_random;
+    srand(time(NULL));
     do
     {
         i_random=rand()%15;
@@ -98,4 +139,82 @@ void get_random_move(int chessboard_data[15][15],int* i_result, int* j_result){
     *j_result=j_random;
 }
 
+
+Node* expand_random(Node* node){
+    Node* new_node=NULL;
+    int i_random;
+    int j_random;
+    bool is_tried=false;
+    srand(time(NULL));
+
+    do
+    {
+        is_tried=false;
+        i_random=rand()%15;
+        j_random=rand()%15;
+        if ((node->chessboard_data[i_random][j_random]!=EMPTY)||(i_random==node
+        ->i&&j_random==node->j))
+        {
+            is_tried=true;
+            
+        }
+        else
+        {
+            for (size_t i = 0; i < node->children_num; i++)
+            {
+                if (i_random==node->children[i]->i&&j_random==node->children[i]->j)
+                {
+                    is_tried=true;
+                    break;
+                }
+
+            }
+        }
+        
+
+        
+    } while (is_tried);
+
+    new_node=new_Node(node);
+    change_node_point(new_node,i_random,j_random);
+    return new_node;
+    
+}
+
+
+Node* expand(Node* node){
+    Node* new_node=new_Node(node);// has problem
+    int i_result;
+    int j_result;
+    int try_state=false;
+    do
+    {
+        try_state=false;
+        //get_random_move(chessboard_data,&i_result,&j_result);
+        for (size_t i = 0; i < node->children_num; i++)
+        {
+            if (i_result==node->children[i]->i&&j_result==node->children[i]->j)
+            {
+                try_state=true;
+                break;
+            }
+            
+        }
+        
+    } while (try_state);
+    
+    change_node_point(new_node,i_result,j_result);
+    return new_node;
+    
+}
+
+void backup(Node* node,player player,int value){
+    while (node!=NULL)
+    {
+        node->visit_num++;
+        node->value+=value;
+        node=node->parent;
+    }
+    
+}
 

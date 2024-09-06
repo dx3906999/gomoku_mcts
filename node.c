@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "node.h"
+#include "game.h"
 
 Node* new_Node(Node* parent){
     Node* node=(Node*)malloc(sizeof(Node));
@@ -10,10 +11,20 @@ Node* new_Node(Node* parent){
     node->value=0;
     node->children_num=0;
     node->visit_num=0;
+
     if (!parent)
     {
         parent->children_num++;
         parent->children[parent->children_num-1]=node;
+        node->children_num_max=parent->children_num_max-1;
+        memcpy(node->chessboard_data,parent->chessboard_data,sizeof(node->chessboard_data));
+        update_chessboard_data_one_step(node->chessboard_data,parent->i,parent->j,parent->player);
+        node->player=0-parent->player;
+    }
+    else
+    {
+        node->children_num_max=MAX_CHILDREN;
+        memcpy(node->chessboard_data,global_chessboard_data,sizeof(node->chessboard_data));
     }
     
     return node;
