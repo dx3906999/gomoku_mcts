@@ -5,6 +5,7 @@
 #include <signal.h>
 #include "global.h"
 #include "game.h"
+#include "mcts.h"
 
 int game_mode;
 
@@ -69,7 +70,7 @@ int main(int argc, char const *argv[])
         int game_mode_choice;
         char ch;
         print_title();
-        printf("1.pvp\n2.pve\n3.train\n4.quit\n");
+        printf("1.pvp\n2.pve(black)\n3.pve(white)\n4.train\n5.quit\n");
         scanf("%d",&game_mode_choice);
         while((ch = getchar()) != '\n' && ch != EOF);
         switch (game_mode_choice)
@@ -78,12 +79,15 @@ int main(int argc, char const *argv[])
             human_vs_human();
             break;
         case 2:
-            human_vs_ai();
+            human_vs_ai(BLACK);
             break;
         case 3:
-            train();
+            human_vs_ai(WHITE);
             break;
         case 4:
+            train();
+            break;
+        case 5:
             exit(0);
             break;
         default:
@@ -643,7 +647,90 @@ void human_vs_human(){
     
 }
 
-void human_vs_ai(){
+void human_vs_ai(player human_player){
+    printf("\x1b[0m\x1b[1;32mHuman vs AI mode.\n\x1b[0m");
+    printf("%s is black and %s is white.\n",BLACK_STR,WHITE_STR);
+    int round=0;
+    bool state=true;
+    int i_input;
+    int j_input;
+    int i_ai;
+    int j_ai;
+
+    while (human_player==BLACK)
+    {
+        round++;
+        
+        do
+        {
+            current_player=BLACK;
+            print_chessboard();
+            printf("Round %d:black player's (%s %s) turn.\n",round,BLACK_STR,BLACK_LAST_STR);
+            printf("Please input the position of your chess piece, such as 'a1' or 'A1'.\n");
+            state=get_move_input(&i_input,&j_input);
+            if (state)
+            {
+                state=check_move_input_is_valid(global_chessboard_data,i_input,j_input);
+                if (state)
+                {
+                    i_black_last=i_input;
+                    j_black_last=j_input;
+                    i_current=i_input;
+                    j_current=j_input;
+                    update_global_chessboard_data_one_step();
+                    update_chessboard_str();
+                    if (is_winner(global_chessboard_data,BLACK,i_black_last,j_black_last))
+                    {
+                        printf("Black player win!\n");
+                        print_chessboard();
+                        return;
+                    }
+                    else if (chessboard_is_full(global_chessboard_data))
+                    {
+                        printf("The chessboard is full!\nTie.\n");
+                        print_chessboard();
+                        return;
+                    }
+                    
+                    
+                }
+                else
+                {
+                    printf("please enter a valid input.\n");
+                }
+                
+                
+            }
+            
+
+        } while (!state);
+
+        printf("Round %d:white player's (%s %s) turn.\n",round,WHITE_STR,WHITE_LAST_STR);
+        //printf("Please input the position of your chess piece, such as 'a1' or 'A1'.\n");
+        mcts(global_chessboard_data,400,WHITE,&i_ai,&j_ai);
+        i_current=i_ai;
+        j_current=j_ai;
+        i_white_last=i_ai;
+        j_white_last=j_ai;
+        update_global_chessboard_data_one_step();
+        update_chessboard_str();
+        if (is_winner(global_chessboard_data,WHITE,i_white_last,j_white_last))
+        {
+            printf("White player win!\n");
+            print_chessboard();
+            return;
+        }
+        else if (chessboard_is_full(global_chessboard_data))
+        {
+            printf("The chessboard is full!\nTie.\n");
+            print_chessboard();
+            return;
+        }
+
+        
+
+    }
+    
 
 }
 void train(){

@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-#define MAX_CHILDREN 225
+#define MAX_CHILDREN 224
 
 
 typedef struct Node Node;

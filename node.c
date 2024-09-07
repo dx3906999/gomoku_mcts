@@ -12,7 +12,7 @@ Node* new_Node(Node* parent){
     node->children_num=0;
     node->visit_num=0;
 
-    if (!parent)
+    if (parent)
     {
         parent->children_num++;
         parent->children[parent->children_num-1]=node;
