@@ -7,7 +7,7 @@
 #define MAX_SIMULATION 150
 
 
-void mcts(int chessboard_data[15][15],int mcts_count,player mcts_player,int* i_result,int* j_result);
+void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_player,int* i_result,int* j_result);
 float UCB(Node* node);
 Node* select(Node* node);
 Node* best_ucb_child(Node* node);
