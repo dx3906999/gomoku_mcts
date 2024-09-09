@@ -678,15 +678,17 @@ void human_vs_ai(player human_player){
                     i_current=i_input;
                     j_current=j_input;
                     update_global_chessboard_data_one_step();
-                    update_chessboard_str();
+                    // update_chessboard_str();
                     if (is_winner(global_chessboard_data,BLACK,i_black_last,j_black_last))
                     {
+                        update_chessboard_str();
                         printf("Black player win!\n");
                         print_chessboard();
                         return;
                     }
                     else if (chessboard_is_full(global_chessboard_data))
                     {
+                        update_chessboard_str();
                         printf("The chessboard is full!\nTie.\n");
                         print_chessboard();
                         return;
@@ -707,7 +709,8 @@ void human_vs_ai(player human_player){
 
         printf("Round %d:white player's (%s %s) turn.\n",round,WHITE_STR,WHITE_LAST_STR);
         //printf("Please input the position of your chess piece, such as 'a1' or 'A1'.\n");
-        mcts(global_chessboard_data,400,100,WHITE,&i_ai,&j_ai);
+        mcts(global_chessboard_data,10000,100,WHITE,&i_ai,&j_ai);
+        current_player=WHITE;
         i_current=i_ai;
         j_current=j_ai;
         i_white_last=i_ai;

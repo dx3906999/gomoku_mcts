@@ -47,6 +47,7 @@ void free_Node(Node* node){
     else
     {
         free(node);
+        return;
     }
     
 }

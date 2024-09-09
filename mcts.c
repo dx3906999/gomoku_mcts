@@ -100,12 +100,14 @@ void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_p
 
         if (!human_step_in_tree)
         {
-            free_Node(mcts_last_choice);
-            mcts_last_choice=NULL;
+            
             visit_num_sum=0;
             root=new_Node(NULL);
+            root->children_num_max=mcts_last_choice->children_num_max-2;
             change_node_point(root,i_current,j_current);
             root->player=0-mcts_player;
+            free_Node(mcts_last_choice);
+            mcts_last_choice=NULL;
         }
         
         
@@ -235,7 +237,7 @@ Node* best_avg_value_child(Node* node){
     int best_value_child=0;
     for (size_t i = 0; i < node->children_num; i++)
     {
-        avg_value_temp=((float)node->value)/((float)node->visit_num);
+        avg_value_temp=((float)node->children[i]->value)/((float)node->children[i]->visit_num);
         if (avg_value_temp>avg_value_max)
         {
             avg_value_max=avg_value_temp;
