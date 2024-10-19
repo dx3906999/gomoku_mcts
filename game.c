@@ -299,7 +299,8 @@ bool is_winner(int chessboard_data[15][15],player player,int i,int j){
     }
     else  // ºÚÆå¿¼ÂÇ½ûÊÖ
     {
-        result=(1)&&(is_five_in_a_row(chessboard_data,player,i,j));
+        result=(!is_banned(chessboard_data,i,j,-1))&&(is_five_in_a_row(chessboard_data,player,i,j));
+        // result=is_five_in_a_row(chessboard_data,player,i,j);
     }
     return result;
 }

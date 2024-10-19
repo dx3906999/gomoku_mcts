@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "referee.h"
 #include "global.h"
 #include "game.h"
@@ -11,6 +12,12 @@
 //     THREE_FAKE,
 //     THREE_REAL
 // }chess_shape_state_t;
+
+
+#ifdef REFEREE_DEBUG
+int bt_depth=0;
+#endif
+
 
 
 /**
@@ -26,9 +33,17 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
     int chess_state[8][15]={0};
     chess_shape_t chess_shape_state[4]={0};
     int chess_shape_sum=0;
+    player temp_chess=chessboard[i][j];
     scan_chess_state(chessboard,i,j,chess_state,BLACK);
+
+    #ifdef REFEREE_DEBUG
+    referee_debug(chessboard,i,j,chess_state);
+    
+    #endif
+
     analyze_chess_state(chess_state,chess_shape_state,chessboard,i,j,BLACK);
 
+    
     for (size_t h_direction = 0; h_direction < 4; h_direction++)
     {
         chess_shape_sum+=chess_shape_state[h_direction];
@@ -57,6 +72,7 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
     
     if (h_direction_last==-1)
     {
+        chessboard[i][j]=temp_chess;
         if (GET_SHAPE_S(chess_shape_sum,FIVE_S))// 得和一般的区分？
         {
             return false;
@@ -126,6 +142,12 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
         // block_num=0;
         // connection_state=1;
         // chess_state_index=0;
+        if (!IS_IN_CHESSBOARD(i,j,1,direction))
+        {
+            chess_state[direction][0]=-1;
+        }
+        
+
         for (size_t k = 1; k < 15 && IS_IN_CHESSBOARD(i,j,k,direction); k++)
         {
             if (chessboard[i+i_direction[direction]*k][j+j_direction[direction]*k]==player)
@@ -158,6 +180,12 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
                     break;
                 }
                 
+                if (k==1)
+                {
+                    connected_index+=2;
+                    
+                }
+                
                 
             }
             else
@@ -175,7 +203,8 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
 
 
 void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[4],int chessboard[15][15],int i,int j,player player){
-
+    chess_shape_t advanced_chess_shape=0;
+    int four_check_num=0;
     
     for (size_t h_direction = 0; h_direction < 4; h_direction++)
     {
@@ -256,7 +285,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
                 break;
 
             case 3:
-                int four_check_num=0;
+                four_check_num=0;
 
                 chessboard[i][j]=player;
 
@@ -332,7 +361,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
                 break;
                 
             case 2:// ^ 不可能形成一个冲四一个跳活三，只可能一个冲四一个眠三，那样的话也不用判断眠三，因其与禁手无关
-                int four_check_num=0;
+                four_check_num=0;
 
                 chessboard[i][j]=player;
 
@@ -371,7 +400,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
 
                 //TODO: 活三判断，即是否为跳活三
                 chessboard[i][j]=player;
-                chess_shape_t advanced_chess_shape=0;
+                // chess_shape_t advanced_chess_shape=0;
                 if (chess_state[h_direction*2][1]==1&&chess_state[h_direction*2][2]==1)
                 {
                     advanced_chess_shape=is_banned(chessboard,i+i_direction[h_direction*2]*(chess_state[h_direction*2][0]+1),j+j_direction[h_direction*2]*(chess_state[h_direction*2][0]+1),h_direction);
@@ -399,7 +428,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
                 break;
 
             case 1:// ^ 同理，也不可能形成一个冲四一个跳活三，那样只能是眠三（因为长连）
-                int four_check_num=0;
+                four_check_num=0;
 
                 chessboard[i][j]=player;
 
@@ -439,7 +468,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
                 //TODO: 跳活三判断
 
                 chessboard[i][j]=player;
-                chess_shape_t advanced_chess_shape=0;
+                // chess_shape_t advanced_chess_shape=0;
 
                 if (chess_state[h_direction*2][1]==1&&chess_state[h_direction*2][2]==2)
                 {
@@ -515,4 +544,47 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
     
 
 }
+
+
+#ifdef REFEREE_DEBUG
+void referee_debug(int chessboard[15][15],int i_last,int j_last,int chess_state[8][15]){
+    bt_depth++;
+    if (bt_depth>=30)
+    {
+        for (size_t i = 0; i < 15; i++)
+        {
+            for (size_t j = 0; j < 15; j++)
+            {
+                if (i==i_last&&j==j_last)
+                {
+                    printf("%d\t",2);
+                }
+                else
+                {
+                    printf("%d\t",chessboard[i][j]);
+                }
+                
+                
+            }
+            printf("\n");
+            
+        }
+        printf("\n");
+        for (size_t i = 0; i < 8; i++)
+        {
+            for (size_t j = 0; j < 15; j++)
+            {
+                printf("%d\t",chess_state[i][j]);
+            }
+            printf("\n");
+            
+        }
+        
+        printf("i,j:%d %d\n",i_last,j_last);
+        exit(114514);
+    }
+    
+}
+
+#endif
 
