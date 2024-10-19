@@ -194,7 +194,7 @@ float UCB(Node* node){
 } */
 
 Node* select(Node* node){
-    while (node->children_num!=0||node->parent==NULL)
+    while (node->children_num_max!=0)
     {
         if (node->children_num!=node->children_num_max)
         {

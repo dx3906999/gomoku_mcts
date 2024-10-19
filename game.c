@@ -3,9 +3,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <signal.h>
+
 #include "global.h"
 #include "game.h"
 #include "mcts.h"
+#include "referee.h"
 
 int game_mode;
 
@@ -16,6 +18,8 @@ int j_black_last=-1;
 int i_white_last=-1;
 int j_white_last=-1;
 
+int i_direction[8]={1,-1,0,0,1,-1,1,-1};
+int j_direction[8]={0,0,1,-1,1,-1,-1,1};
 
 int current_player=BLACK;
 
@@ -63,7 +67,7 @@ int main(int argc, char const *argv[])
 {
     char* chessboard_str_backup=(char*)malloc(sizeof(chessboard_str));
     memcpy(chessboard_str_backup,chessboard_str,sizeof(chessboard_str));
-
+    signal(SIG_SAVE,signal_handle);
 
     while (1)
     {
@@ -140,7 +144,9 @@ bool get_move_input(int* i, int* j){
     else if (ch=='W')
     {
         printf("save game.\n");
+        while((ch = getchar()) != '\n' && ch != EOF);//clear the buffer
         // save
+        raise(SIG_SAVE);
         // maybe use signal
         result=false;
     }
@@ -709,7 +715,7 @@ void human_vs_ai(player human_player){
 
         printf("Round %d:white player's (%s %s) turn.\n",round,WHITE_STR,WHITE_LAST_STR);
         //printf("Please input the position of your chess piece, such as 'a1' or 'A1'.\n");
-        mcts(global_chessboard_data,10000,100,WHITE,&i_ai,&j_ai);
+        mcts(global_chessboard_data,30000,200,WHITE,&i_ai,&j_ai);
         current_player=WHITE;
         i_current=i_ai;
         j_current=j_ai;
