@@ -7,6 +7,11 @@
 #define MAX_SIMULATION 150
 
 
+extern int visit_num_sum;
+extern player global_mcts_player;
+extern Node* mcts_root;
+extern Node* mcts_last_choice;
+
 void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_player,int* i_result,int* j_result);
 float UCB(Node* node);
 Node* select_mcts(Node* node);

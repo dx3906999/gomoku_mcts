@@ -73,6 +73,7 @@ int main(int argc, char const *argv[])
     {
         int game_mode_choice;
         char ch;
+
         print_title();
         printf("1.pvp\n2.pve(black)\n3.pve(white)\n4.train\n5.quit\n");
         scanf("%d",&game_mode_choice);
@@ -101,6 +102,20 @@ int main(int argc, char const *argv[])
 
         memset(global_chessboard_data,0,15*15*sizeof(int));
         memcpy(chessboard_str,chessboard_str_backup,sizeof(chessboard_str));
+        
+        // some global_var
+        i_current=0;
+        j_current=0;
+        i_black_last=-1;
+        j_black_last=-1;
+        i_white_last=-1;
+        j_white_last=-1;
+        current_player=BLACK;
+
+        visit_num_sum=0;
+        global_mcts_player=WHITE;
+        mcts_root=NULL;
+        mcts_last_choice=NULL;
     }
 
     free(chessboard_str_backup);
