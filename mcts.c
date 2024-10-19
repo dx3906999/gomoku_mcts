@@ -45,7 +45,7 @@ Node* mcts_last_choice=NULL;
 
 //     for (size_t i = 0; i < mcts_count; i++)
 //     {
-//         selected_node=select(root);
+//         selected_node=select_mcts(root);
 //         value=simulation(selected_node,MAX_SIMULATION);
 //         backup(selected_node,value);
 //     }
@@ -121,7 +121,7 @@ void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_p
 
     for (size_t i = 0; i < mcts_count; i++)
     {
-        select_node=select(root);
+        select_node=select_mcts(root);
         value=simulation(select_node,100);
         backup(select_node,value);
     }
@@ -165,7 +165,7 @@ float UCB(Node* node){
  * @param node 
  * @return Node* 
  */
-/* Node* select(Node* node){
+/* Node* select_mcts(Node* node){
     if (node->children_num!=node->children_num_max)
     {
         return expand(node);
@@ -186,14 +186,14 @@ float UCB(Node* node){
             
         }
 
-        return select(node->children[max_child]);
+        return select_mcts(node->children[max_child]);
         
     }
     
     
 } */
 
-Node* select(Node* node){
+Node* select_mcts(Node* node){
     while (node->children_num_max!=0)
     {
         if (node->children_num!=node->children_num_max)

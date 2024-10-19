@@ -138,7 +138,7 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
     {
         empty_index=1;
         connected_index=0;
-        chess_state_index=0;
+        chess_state_index=0;// 事实上，这个没什么用
         // block_num=0;
         // connection_state=1;
         // chess_state_index=0;
@@ -183,7 +183,7 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
                 if (k==1)
                 {
                     connected_index+=2;
-                    
+
                 }
                 
                 
