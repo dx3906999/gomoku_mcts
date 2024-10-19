@@ -366,7 +366,7 @@ int simulation(Node* node,int max_count){
 
     // 先判断本节点下完之后是否已经获胜
     is_winner_state=is_winner(chessboard_data,node->player,node->i,node->j);
-    if (is_winner==1)
+    if (is_winner_state==1)
     {
         if (node->player==global_mcts_player) 
         {
@@ -380,7 +380,7 @@ int simulation(Node* node,int max_count){
         }
         
     }
-    else if (is_winner==2)
+    else if (is_winner_state==2)
     {
         if (global_mcts_player==BLACK)
         {
