@@ -360,11 +360,13 @@ int simulation(Node* node,int max_count){
     int j_random;
     int value;
     int now_ai_player=0-node->player;
+    int is_winner_state=0;
     memcpy(chessboard_data,node->chessboard_data,sizeof(chessboard_data));
     update_chessboard_data_one_step(chessboard_data,node->i,node->j,node->player);
 
     // 先判断本节点下完之后是否已经获胜
-    if (is_winner(chessboard_data,node->player,node->i,node->j))
+    is_winner_state=is_winner(chessboard_data,node->player,node->i,node->j);
+    if (is_winner==1)
     {
         if (node->player==global_mcts_player) 
         {
@@ -378,6 +380,22 @@ int simulation(Node* node,int max_count){
         }
         
     }
+    else if (is_winner==2)
+    {
+        if (global_mcts_player==BLACK)
+        {
+            value=0;
+            return value;
+        }
+        else
+        {
+            value=1;
+            return value;
+        }
+        
+        
+    }
+    
     
 
     for (size_t i = 0; i < max_count; i++)
@@ -386,13 +404,19 @@ int simulation(Node* node,int max_count){
         {
             get_random_move(chessboard_data,&i_random,&j_random);
             update_chessboard_data_one_step(chessboard_data,i_random,j_random,now_ai_player);
-
-            if (is_winner(chessboard_data,now_ai_player,i_random,j_random))
+            is_winner_state=is_winner(chessboard_data,now_ai_player,i_random,j_random);
+            if (is_winner_state==1)
             {
                 value=(now_ai_player==global_mcts_player)?(1):(0);
                 return value;
                 
             }
+            else if (is_winner_state==2)
+            {
+                value=(global_mcts_player==WHITE)?(1):(0);
+                return value;
+            }
+            
             now_ai_player=0-now_ai_player;
             
         }
