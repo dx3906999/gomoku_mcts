@@ -26,7 +26,7 @@ int bt_depth=0;
  * @param chessboard 
  * @param i 
  * @param j 
- * @param h_direction_last last half direction 为-1时为纯禁手判断
+ * @param h_direction_last last half direction 为-1时为纯禁手判断，-2返回更多信息
  * @return chess_shape_t 
  */
 chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last){
@@ -73,7 +73,7 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
     if (h_direction_last==-1)
     {
         chessboard[i][j]=temp_chess;
-        if (GET_SHAPE_S(chess_shape_sum,FIVE_S))// 得和一般的区分？
+        if (GET_SHAPE_S(chess_shape_sum,FIVE_S))
         {
             return false;
         }
@@ -94,9 +94,32 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
             return false;
         }
     }
+    else if (h_direction_last==-2)
+    {
+        if (GET_SHAPE_S(chess_shape_sum,FIVE_S))
+        {
+            return chess_shape_sum;
+        }
+        else if (GET_SHAPE_S(chess_shape_sum,OVERLINE_S))
+        {
+            return chess_shape_sum|TRUE_S;
+        }
+        else if (GET_SHAPE_S(chess_shape_sum,FOUR_HALF_S)+GET_SHAPE_S(chess_shape_sum,FOUR_OPEN_S)>=2)
+        {
+            return chess_shape_sum|TRUE_S;
+        }
+        else if (GET_SHAPE_S(chess_shape_sum,THREE_OPEN_S)>=2)
+        {
+            return chess_shape_sum|TRUE_S;
+        }
+        else
+        {
+            return chess_shape_sum;
+        }
+    }
     else
     {
-        if (GET_SHAPE_S(chess_shape_sum,FIVE_S))// 得和一般的区分？
+        if (GET_SHAPE_S(chess_shape_sum,FIVE_S))
         {
             return chess_shape_state[h_direction_last];
         }
@@ -300,19 +323,20 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
 
                 chessboard[i][j]=EMPTY;
 
-                switch (four_check_num)
-                {
-                case 2:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S*2;// 这其实是禁手 oeOOOeo
-                    goto case_3_end;
-                    break;
-                case 1:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S;
-                    goto case_3_end;
-                    break;
-                default:// TODO: 三连的活三判断
-                    break;
-                }
+                chess_shape_state[h_direction]+=FOUR_HALF_S*four_check_num;
+                // switch (four_check_num)
+                // {
+                // case 2:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S*2;// 这其实是禁手 oeOOOeo
+                //     goto case_3_end;
+                //     break;
+                // case 1:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S;
+                //     goto case_3_end;
+                //     break;
+                // default:// TODO: 三连的活三判断
+                //     break;
+                // }
 
                 chessboard[i][j]=player;// 由于活四只能是 eOOOOe ，则只需要判断临近空位落子后是否为活四
                 if (chess_state[h_direction*2][1]>=1&&chess_state[h_direction*2+1][1]>=1)
@@ -384,19 +408,21 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
 
                 chessboard[i][j]=EMPTY;
                 
-                switch (four_check_num)
-                {
-                case 2:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S*2;// ooeOOeoo 是禁手，但 ooeooeOO 暂时不是禁手，因为有一个4是之前形成的
-                    goto case_2_end;
-                    break;
-                case 1:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S;
-                    goto case_2_end;
-                    break;
-                default:
-                    break;
-                }
+                chess_shape_state[h_direction]+=FOUR_HALF_S*four_check_num;
+
+                // switch (four_check_num)
+                // {
+                // case 2:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S*2;// ooeOOeoo 是禁手，但 ooeooeOO 暂时不是禁手，因为有一个4是之前形成的
+                //     goto case_2_end;
+                //     break;
+                // case 1:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S;
+                //     goto case_2_end;
+                //     break;
+                // default:
+                //     break;
+                // }
 
                 //TODO: 活三判断，即是否为跳活三
                 chessboard[i][j]=player;
@@ -451,19 +477,21 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
 
                 chessboard[i][j]=EMPTY;
                 
-                switch (four_check_num)
-                {
-                case 2:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S*2;// oooeOeooo 是禁手，但 oooeoeOOO 暂时不是禁手，因为有一个4是之前形成的
-                    goto case_2_end;
-                    break;
-                case 1:
-                    chess_shape_state[h_direction]+=FOUR_HALF_S;
-                    goto case_2_end;
-                    break;
-                default:
-                    break;
-                }
+
+                chess_shape_state[h_direction]+=FOUR_HALF_S*four_check_num;
+                // switch (four_check_num)
+                // {
+                // case 2:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S*2;// oooeOeooo 是禁手，但 oooeoeOOO 暂时不是禁手，因为有一个4是之前形成的
+                //     goto case_2_end;
+                //     break;
+                // case 1:
+                //     chess_shape_state[h_direction]+=FOUR_HALF_S;
+                //     goto case_2_end;
+                //     break;
+                // default:
+                //     break;
+                // }
 
                 //TODO: 跳活三判断
 
@@ -543,6 +571,35 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
     }
     
 
+}
+
+
+bool is_five(int chessboard[15][15],player player,int i,int j){
+    int sum=0;
+
+    for (size_t h_direction = 0; h_direction < 4; h_direction++)
+    {
+        for (size_t k = 1; k < 5 && IS_IN_CHESSBOARD(i,j,k,h_direction*2) && chessboard[i+i_direction[h_direction*2]*k][j+j_direction[h_direction*2]*k]==player; k++)
+        {
+            sum++;
+        }
+
+        for (size_t k = 1; k < 5 && IS_IN_CHESSBOARD(i,j,k,h_direction*2+1) && chessboard[i+i_direction[h_direction*2+1]*k][j+j_direction[h_direction*2+1]*k]==player; k++)
+        {
+            sum++;
+        }
+        
+        if (sum>=4)
+        {
+            return true;
+        }
+
+        sum=0;
+        
+    }
+
+    return false;
+    
 }
 
 

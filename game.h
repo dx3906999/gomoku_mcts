@@ -25,7 +25,7 @@ void update_chessboard_data_one_step(int chessboard_data[15][15], int i, int j, 
 void update_global_chessboard_data_one_step();
 bool chessboard_is_full(int chessboard[15][15]);
 int is_winner(int chessboard_data[15][15],player player,int i,int j);
-bool is_five_in_a_row(int chessboard_data[15][15],player player,int i,int j);
+// bool is_five_in_a_row(int chessboard_data[15][15],player player,int i,int j);
 void signal_handle(int signum);
 void human_vs_human();
 void human_vs_ai(player human_player);
