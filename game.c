@@ -533,7 +533,7 @@ void human_vs_ai(player human_player){
 
         printf("Round %d:white's (%s %s) turn.\n",round,WHITE_STR,WHITE_LAST_STR);
         //printf("Please input the position of your chess piece, such as 'a1' or 'A1'.\n");
-        mcts(global_chessboard_data,30000,200,WHITE,&i_ai,&j_ai);
+        mcts(global_chessboard_data,80000,10000,WHITE,&i_ai,&j_ai);
         current_player=WHITE;
         i_current=i_ai;
         j_current=j_ai;

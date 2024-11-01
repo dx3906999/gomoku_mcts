@@ -122,11 +122,12 @@ void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_p
     for (size_t i = 0; i < mcts_count; i++)
     {
         select_node=select_mcts(root);
-        value=simulation(select_node,100);
+        value=simulation(select_node,225);
         backup(select_node,value);
     }
     
-    select_node=best_avg_value_child(root);
+    // select_node=best_avg_value_child(root);
+    select_node=most_visited_child(root);
     *i_result=select_node->i;
     *j_result=select_node->j;
     
@@ -248,6 +249,25 @@ Node* best_avg_value_child(Node* node){
     }
 
     return (node->children_num==0)?(node):(node->children[best_value_child]);
+    
+}
+
+Node* most_visited_child(Node* node){
+    float visit_max=0;
+    float visit_tmp=0;
+    int most_visited_child=0;
+    for (size_t i = 0; i < node->children_num; i++)
+    {
+        visit_tmp=node->children[i]->visit_num;
+        if (visit_tmp>visit_max)
+        {
+            visit_max=visit_tmp;
+            most_visited_child=i;
+        }
+        
+    }
+
+    return (node->children_num==0)?(node):(node->children[most_visited_child]);
     
 }
 
@@ -375,7 +395,7 @@ int simulation(Node* node,int max_count){
         }
         else
         {
-            value=0;
+            value=-1;
             return value;
         }
         
@@ -384,7 +404,7 @@ int simulation(Node* node,int max_count){
     {
         if (global_mcts_player==BLACK)
         {
-            value=0;
+            value=-1;
             return value;
         }
         else
@@ -407,13 +427,13 @@ int simulation(Node* node,int max_count){
             is_winner_state=is_winner(chessboard_data,now_ai_player,i_random,j_random);
             if (is_winner_state==1)
             {
-                value=(now_ai_player==global_mcts_player)?(1):(0);
+                value=(now_ai_player==global_mcts_player)?(1):(-1);
                 return value;
                 
             }
             else if (is_winner_state==2)
             {
-                value=(global_mcts_player==WHITE)?(1):(0);
+                value=(global_mcts_player==WHITE)?(1):(-1);
                 return value;
             }
             
