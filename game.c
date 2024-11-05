@@ -278,57 +278,9 @@ void update_global_chessboard_data_one_step(){
     global_chessboard_data[i_current][j_current]=current_player;
 }
 
-bool chessboard_is_full(int chessboard_data[15][15]){
-    for (size_t i = 0; i < 15; i++)
-    {
-        for (size_t j = 0; j < 15; j++)
-        {
-            if (chessboard_data[i][j]==EMPTY)
-            {
-                return false;
-            }
-            
-        }
-        
-    }
 
-    return true;
-    
-}
 
-/**
- * @brief 判断当前局面输赢，不包含下满棋盘的情况
- * 
- * @param chessboard_data 
- * @param player 
- * @param i 
- * @param j 
- * @return int 继续下为0，一方获胜为1，黑方禁手为2
- */
-int is_winner(int chessboard_data[15][15],player player,int i,int j){
-    int result;
-    int ban_state=0;
-    if (player==WHITE)  // 白棋无禁手
-    {
-        result=is_five(chessboard_data,player,i,j);
-    }
-    else  // 黑棋考虑禁手
-    {
-        ban_state=is_banned(chessboard_data,i,j,-1);
-        if (ban_state)
-        {
-            result=2;
-        }
-        else
-        {
-            result=is_five(chessboard_data,player,i,j);
-        }
-        
-        // result=(!is_banned(chessboard_data,i,j,-1))&&(is_five_in_a_row(chessboard_data,player,i,j));
-        // result=is_five_in_a_row(chessboard_data,player,i,j);
-    }
-    return result;
-}
+
 
 
 

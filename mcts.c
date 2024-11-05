@@ -156,7 +156,7 @@ void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_p
 
 
 float UCB(Node* node){
-    return (node->visit_num!=0)?(node->value/node->visit_num+UCB_C*sqrt((2*log(visit_num_sum))/node->visit_num)):__FLT32_NORM_MAX__;
+    return (node->visit_num!=0)?(node->value/node->visit_num+UCB_C*sqrt((2*log(node->parent->visit_num))/node->visit_num)):__FLT32_NORM_MAX__;
 }
 
 

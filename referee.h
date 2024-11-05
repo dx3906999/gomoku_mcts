@@ -40,6 +40,8 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
 void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],player player);
 void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[4],int chessboard[15][15],int i,int j,player player);
 bool is_five(int chessboard[15][15],player player,int i,int j);
+bool chessboard_is_full(int chessboard_data[15][15]);
+int is_winner(int chessboard_data[15][15],player player,int i,int j);
 
 #ifdef REFEREE_DEBUG
 void referee_debug(int chessboard[15][15],int i,int j,int chess_state[8][15]);
