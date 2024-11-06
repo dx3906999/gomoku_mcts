@@ -29,11 +29,11 @@ int bt_depth=0;
  * @param h_direction_last last half direction 为-1时为纯禁手判断，-2返回更多信息
  * @return chess_shape_t 
  */
-chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last){
+chess_shape_t is_banned(player_t chessboard[15][15],int i,int j,int h_direction_last){
     int chess_state[8][15]={0};
     chess_shape_t chess_shape_state[4]={0};
     int chess_shape_sum=0;
-    player temp_chess=chessboard[i][j];
+    player_t temp_chess=chessboard[i][j];
     scan_chess_state(chessboard,i,j,chess_state,BLACK);
 
     #ifdef REFEREE_DEBUG
@@ -146,11 +146,11 @@ chess_shape_t is_banned(int chessboard[15][15],int i,int j,int h_direction_last)
 }
 
 
-// bool is_blocked(int chessboard[15][15],int i,int j){
+// bool is_blocked(player_t chessboard[15][15],int i,int j){
 
 // }
 
-void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],player player){
+void scan_chess_state(player_t chessboard[15][15],int i,int j,int chess_state[8][15],player_t player){
     int empty_index=1;
     int connected_index=0;
     // int block_num=0;
@@ -225,7 +225,7 @@ void scan_chess_state(int chessboard[15][15],int i,int j,int chess_state[8][15],
 }
 
 
-void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[4],int chessboard[15][15],int i,int j,player player){
+void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[4],player_t chessboard[15][15],int i,int j,player_t player){
     chess_shape_t advanced_chess_shape=0;
     int four_check_num=0;
     
@@ -574,7 +574,7 @@ void analyze_chess_state(int chess_state[8][15],chess_shape_t chess_shape_state[
 }
 
 
-bool is_five(int chessboard[15][15],player player,int i,int j){
+bool is_five(player_t chessboard[15][15],player_t player,int i,int j){
     int sum=0;
 
     for (size_t h_direction = 0; h_direction < 4; h_direction++)
@@ -603,7 +603,7 @@ bool is_five(int chessboard[15][15],player player,int i,int j){
 }
 
 
-bool chessboard_is_full(int chessboard_data[15][15]){
+bool chessboard_is_full(player_t chessboard_data[15][15]){
     for (size_t i = 0; i < 15; i++)
     {
         for (size_t j = 0; j < 15; j++)
@@ -631,7 +631,7 @@ bool chessboard_is_full(int chessboard_data[15][15]){
  * @param j 
  * @return int 继续下为0，一方获胜为1，黑方禁手为2
  */
-int is_winner(int chessboard_data[15][15],player player,int i,int j){
+int is_winner(player_t chessboard_data[15][15],player_t player,int i,int j){
     int result;
     int ban_state=0;
     if (player==WHITE)  // 白棋无禁手
@@ -658,7 +658,7 @@ int is_winner(int chessboard_data[15][15],player player,int i,int j){
 
 
 #ifdef REFEREE_DEBUG
-void referee_debug(int chessboard[15][15],int i_last,int j_last,int chess_state[8][15]){
+void referee_debug(player_t chessboard[15][15],int i_last,int j_last,int chess_state[8][15]){
     bt_depth++;
     if (bt_depth>=30)
     {

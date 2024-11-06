@@ -21,9 +21,9 @@ int j_white_last=-1;
 int i_direction[8]={1,-1,0,0,1,-1,1,-1};
 int j_direction[8]={0,0,1,-1,1,-1,-1,1};
 
-int current_player=BLACK;
+player_t current_player=BLACK;
 
-int global_chessboard_data[15][15]={[0 ... 14][0 ... 14]=0};
+player_t global_chessboard_data[15][15]={[0 ... 14][0 ... 14]=0};
 
 char chessboard_str[]=
     "15 庚岸房岸房岸房岸房岸房岸房岸房岸房岸房岸房岸房岸房岸房岸庖\n"
@@ -100,7 +100,7 @@ int main(int argc, char const *argv[])
             break;
         }
 
-        memset(global_chessboard_data,0,15*15*sizeof(int));
+        memset(global_chessboard_data,0,sizeof(global_chessboard_data));
         memcpy(chessboard_str,chessboard_str_backup,sizeof(chessboard_str));
         
         // some global_var
@@ -194,7 +194,7 @@ bool get_move_input(int* i, int* j){
 
 }
 
-bool check_move_input_is_valid(int chessboard_data[15][15],int i,int j){
+bool check_move_input_is_valid(player_t chessboard_data[15][15],int i,int j){
     if (chessboard_data[i][j]!=EMPTY)
     {
         return false;
@@ -270,7 +270,7 @@ void update_chessboard_str(){
  * @param j 
  * @param player 
  */
-void update_chessboard_data_one_step(int chessboard_data[15][15],int i,int j,player player){
+void update_chessboard_data_one_step(player_t chessboard_data[15][15],int i,int j,player_t player){
     chessboard_data[i][j]=player;
 }
 
@@ -414,7 +414,7 @@ void human_vs_human(){
     
 }
 
-void human_vs_ai(player human_player){
+void human_vs_ai(player_t human_player){
     printf("\x1b[0m\x1b[1;32mHuman vs AI mode.\n\x1b[0m");
     printf("%s is black and %s is white.\n",BLACK_STR,WHITE_STR);
     int round=0;

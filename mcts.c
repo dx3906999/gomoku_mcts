@@ -9,12 +9,13 @@
 #include "node.h"
 #include "global.h"
 #include "game.h"
+#include "referee.h"
 
 
 
 float UCB_C=1.0;
 int visit_num_sum=0;
-player global_mcts_player=WHITE;
+player_t global_mcts_player=WHITE;
 Node* mcts_root=NULL;
 Node* mcts_last_choice=NULL;
 
@@ -29,7 +30,7 @@ Node* mcts_last_choice=NULL;
  * @param i_result 
  * @param j_result 
  */
-// void mcts(int chessboard_data[15][15],int mcts_count,player mcts_player,int* i_result,int* j_result){
+// void mcts(player_t chessboard_data[15][15],int mcts_count,player_t mcts_player,int* i_result,int* j_result){
 //     global_mcts_player=mcts_player;
 //     Node* root=(mcts_root==NULL)?(new_Node(NULL)):(mcts_root);
 //     root->player=mcts_player;
@@ -59,7 +60,7 @@ Node* mcts_last_choice=NULL;
 // }
 
 
-void mcts(int chessboard[15][15],int mcts_count,int max_simulation,player mcts_player,int* i_result,int* j_result){
+void mcts(player_t chessboard[15][15],int mcts_count,int max_simulation,player_t mcts_player,int* i_result,int* j_result){
     Node* root=NULL;
     Node* select_node=NULL;
     bool human_step_in_tree=false;
@@ -280,7 +281,7 @@ Node* most_visited_child(Node* node){
  * @param i_result 
  * @param j_result 
  */
-void get_random_move(int chessboard_data[15][15],int* i_result, int* j_result){
+void get_random_move(player_t chessboard_data[15][15],int* i_result, int* j_result){
     int i_random;
     int j_random;
     srand(time(NULL));
@@ -336,31 +337,31 @@ Node* expand_random(Node* node){
 }
 
 
-Node* expand(Node* node){
-    Node* new_node=new_Node(node);// has problem
-    int i_result;
-    int j_result;
-    int try_state=false;
-    do
-    {
-        try_state=false;
-        //get_random_move(chessboard_data,&i_result,&j_result);
-        for (size_t i = 0; i < node->children_num; i++)
-        {
-            if (i_result==node->children[i]->i&&j_result==node->children[i]->j)
-            {
-                try_state=true;
-                break;
-            }
+// Node* expand(Node* node){
+//     Node* new_node=new_Node(node);// has problem
+//     int i_result;
+//     int j_result;
+//     int try_state=false;
+//     do
+//     {
+//         try_state=false;
+//         //get_random_move(chessboard_data,&i_result,&j_result);
+//         for (size_t i = 0; i < node->children_num; i++)
+//         {
+//             if (i_result==node->children[i]->i&&j_result==node->children[i]->j)
+//             {
+//                 try_state=true;
+//                 break;
+//             }
             
-        }
+//         }
         
-    } while (try_state);
+//     } while (try_state);
     
-    change_node_point(new_node,i_result,j_result);
-    return new_node;
+//     change_node_point(new_node,i_result,j_result);
+//     return new_node;
     
-}
+// }
 
 void backup(Node* node,int value){
     while (node!=NULL)
@@ -375,7 +376,7 @@ void backup(Node* node,int value){
 
 
 int simulation(Node* node,int max_count){
-    int chessboard_data[15][15];
+    player_t chessboard_data[15][15];
     int i_random;
     int j_random;
     int value;
